@@ -1,9 +1,10 @@
 package zamgerapi.types
 
 import org.json.JSONObject
+import zamgerapi.utility.getStringOrInt
 
 public class Person(json : JSONObject) {
-    val Id : Int = json.getInt("studentIdNr")
+    val Id : String = json.getStringOrInt("studentIdNr")
     val Surname : String = json.getString("surname")
     val Name : String = json.getString("name")
     val TitlesPre : String = json.getString("titlesPre")

@@ -1,8 +1,7 @@
 package zamgerapi
 
 import org.json.JSONObject
-import utility.WebUtils
-import utility.log
+import zamgerapi.utility.WebUtils
 
 public class ZamgerContext(username : String, password : String) {
     private val courseApi : CourseAPI = CourseAPI(this)
@@ -22,6 +21,7 @@ public class ZamgerContext(username : String, password : String) {
 
     init {
         val login = JSONObject(WebUtils.getHTML("https://zamger.etf.unsa.ba/api_v5/auth",
+                true,
                 WebUtils.UrlParam("login", username),
                 WebUtils.UrlParam("pass", password), requestMethod = "POST" ))
 

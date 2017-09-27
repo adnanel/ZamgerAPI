@@ -1,21 +1,23 @@
-package utility
+package zamgerapi.utility
 
-import jdk.nashorn.internal.runtime.ScriptingFunctions.readLine
-import sun.net.www.http.HttpClient
+import zamgerapi.types.RequestHistoryEntry
 import java.io.InputStreamReader
 import java.io.BufferedReader
 import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
-import com.sun.xml.internal.ws.streaming.XMLStreamWriterUtil.getOutputStream
 import java.io.DataOutputStream
 import java.nio.charset.StandardCharsets
+import java.util.*
 
 
 class WebUtils {
     companion object {
+        val requestHistoy = HashMap<String, RequestHistoryEntry>()
+        val CACHE_LIFETIME = 60 * 60 * 1000 // 1 sat
+
         @Throws(Exception::class)
-        fun getHTML(url: String, vararg params : UrlParam, requestMethod : String = "GET"): String {
+        fun getHTML(url: String, forceHardReload : Boolean, vararg params : UrlParam, requestMethod : String = "GET"): String {
             var requestData = ""
             var first = true
             for ( param in params ) {
@@ -24,13 +26,21 @@ class WebUtils {
                 } else {
                     requestData += "&"
                 }
-                requestData += param.key + "=" + URLEncoder.encode(param.value)
+                requestData += param.key + "=" + URLEncoder.encode(param.value, StandardCharsets.UTF_8.toString())
             }
 
             var urlToRead = url
             //add params to url if GET
             if ( requestMethod.equals("GET", true) && params.isNotEmpty()) {
                 urlToRead += "?$requestData"
+
+                //trenutno samo podrzavamo kesiranje GET requests
+                if ( requestHistoy.containsKey(url) ) {
+                    val cache = requestHistoy.get(url)
+                    if ( cache != null && Date().time - cache.date.time > CACHE_LIFETIME ) {
+                        return cache.response
+                    }
+                }
             }
 
             val result = StringBuilder()
@@ -62,7 +72,10 @@ class WebUtils {
                 line = rd.readLine()
             }
             rd.close()
-            return result.toString()
+
+            val response = result.toString()
+            requestHistoy.put(urlToRead, RequestHistoryEntry(response))
+            return response
         }
     }
 

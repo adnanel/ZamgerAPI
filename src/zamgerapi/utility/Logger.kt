@@ -1,9 +1,7 @@
-package utility
+package zamgerapi.utility
 
-import java.io.IOException
 import java.io.OutputStream
 import java.io.PrintStream
-import java.io.PrintWriter
 
 fun log(msg : String) {
     System.out.println(msg);
