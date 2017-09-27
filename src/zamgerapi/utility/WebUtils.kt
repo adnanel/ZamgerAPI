@@ -35,8 +35,8 @@ class WebUtils {
                 urlToRead += "?$requestData"
 
                 //trenutno samo podrzavamo kesiranje GET requests
-                if ( requestHistoy.containsKey(url) ) {
-                    val cache = requestHistoy.get(url)
+                if ( requestHistoy.containsKey(urlToRead) ) {
+                    val cache = requestHistoy.get(urlToRead)
                     if ( cache != null && Date().time - cache.date.time < CACHE_LIFETIME ) {
                         return cache.response
                     }
