@@ -37,7 +37,7 @@ class WebUtils {
                 //trenutno samo podrzavamo kesiranje GET requests
                 if ( requestHistoy.containsKey(url) ) {
                     val cache = requestHistoy.get(url)
-                    if ( cache != null && Date().time - cache.date.time > CACHE_LIFETIME ) {
+                    if ( cache != null && Date().time - cache.date.time < CACHE_LIFETIME ) {
                         return cache.response
                     }
                 }
