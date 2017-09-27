@@ -18,7 +18,7 @@ class Course(json : JSONObject) {
         }
 
         json.getJSONArray("staff").forEach {
-            Staff += Person(it as JSONObject)
+            Staff += Person((it as JSONObject).getJSONObject("Person"))
         }
     }
 }

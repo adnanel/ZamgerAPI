@@ -1,3 +1,4 @@
+import zamgerapi.CourseAPI
 import zamgerapi.ZamgerContext
 import java.io.File
 
@@ -23,5 +24,5 @@ fun main( args : Array<String> ) {
 
     val person = context.PersonApi.SearchPersonbyUser("aelezovic2")
 
-    val a = 5
+    context.CourseAPI.GetProgrammeForSemester(CourseAPI.PROGRAMME_RI, 1)
 }

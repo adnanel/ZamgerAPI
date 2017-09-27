@@ -2,6 +2,7 @@ package zamgerapi
 
 import org.json.JSONObject
 import zamgerapi.utility.WebUtils
+import zamgerapi.utility.getSafely
 
 public class ZamgerContext(username : String, password : String) {
     private val courseApi : CourseAPI = CourseAPI(this)
@@ -14,6 +15,7 @@ public class ZamgerContext(username : String, password : String) {
     val EnrollmentApi : EnrollmentApi = EnrollmentApi(this)
     val GroupApi : GroupApi = GroupApi(this)
     val HomeworkApi : HomeworkApi = HomeworkApi(this)
+    val CourseAPI : CourseAPI = CourseAPI(this)
 
     val sessionId : String
     val personId : Int
@@ -29,7 +31,7 @@ public class ZamgerContext(username : String, password : String) {
             throw Exception("Failed to login to zamger")
         }
 
-        sessionId = login.getString("sid")
+        sessionId = login.getSafely("sid", "")
         personId = login.getInt("userid")
 
     }
