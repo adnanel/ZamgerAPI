@@ -31,7 +31,7 @@ public class ZamgerContext(username : String, password : String) {
             throw Exception("Failed to login to zamger")
         }
 
-        sessionId = login.getSafely("sid", "")
+        sessionId = login.getSafely("sid", "")!!
         personId = login.getInt("userid")
 
     }

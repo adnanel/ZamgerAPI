@@ -48,10 +48,12 @@ public class CourseAPI(private val zctx : ZamgerContext) {
     }
 
     public fun GetCoursesByTeacher(teacher : Int) : List<Course> {
+        //inace moze samo studentska direktno prozivati ovaj API call, pa je low priority
         TODO()
     }
 
     public fun GetCoursesForStudent(student : Int) : List<Course> {
+        //inace moze samo studentska direktno prozivati ovaj API call, pa je low priority
         TODO()
     }
 

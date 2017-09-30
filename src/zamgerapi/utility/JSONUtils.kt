@@ -3,8 +3,9 @@ package zamgerapi.utility
 import org.json.JSONObject
 
 
-fun <T> JSONObject.getSafely(key : String, defVal : T) : T {
+fun <T> JSONObject.getSafely(key : String, defVal : T) : T? {
     if ( this.has(key) ) {
+        if ( this.isNull(key) ) return null
         return this.get(key) as T
     }
     //log("JSONObject doesn't contain key " + key + ", using defVal. JSON Object : " + this.toString())

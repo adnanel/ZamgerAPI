@@ -24,11 +24,17 @@ fun main( args : Array<String> ) {
 
     val person = context.PersonApi.SearchPersonbyUser("aelezovic2")
 
+    /*
     context.CourseAPI.GetProgrammeForSemester(CourseAPI.PROGRAMME_RI, 5).forEach {
         try {
             val course = context.CourseAPI.GetCourseById(it.CourseID.toInt())
         } catch ( ex : Exception ) {
             ex.printStackTrace()
         }
+    }
+    */
+
+    for ( p in context.PersonApi.SearchPersons("adnan") ) {
+        System.out.println(p.toString())
     }
 }
