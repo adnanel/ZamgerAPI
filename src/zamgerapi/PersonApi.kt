@@ -41,7 +41,7 @@ class PersonApi(private val zctx : ZamgerContext) {
             val res = JSONObject(WebUtils.getHTML("https://zamger.etf.unsa.ba/api_v5/person/search",
                     forceHardReload,
                     WebUtils.UrlParam("SESSION_ID", "" + zctx.sessionId),
-                    WebUtils.UrlParam("query", URLEncoder.encode(query, StandardCharsets.UTF_8.toString()))))
+                    WebUtils.UrlParam("query", query)))
 
             val arr = res.getJSONArray("results")
             val list = ArrayList<Person>()
