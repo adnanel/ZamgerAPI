@@ -4,7 +4,7 @@ import org.json.JSONObject
 import zamgerapi.utility.WebUtils
 import zamgerapi.utility.getSafely
 
-public class ZamgerContext(username : String, password : String) {
+public class ZamgerContext(username : String, password : String, keepAlive : Boolean = true) {
     private val courseApi : CourseAPI = CourseAPI(this)
 
     val PersonApi : PersonApi = PersonApi(this)
@@ -34,5 +34,19 @@ public class ZamgerContext(username : String, password : String) {
         sessionId = login.getSafely("sid", "")!!
         personId = login.getInt("userid")
 
+        if ( keepAlive ) {
+            object : Thread() {
+                override fun run() {
+                    super.run()
+
+                    //svake 2 minute uradimo neki API request da sesija ostane ziva
+                    //todo: while (true) je ugly
+                    while ( true ) {
+                        val me = PersonApi.SearchPersonbyUser(username, true)
+                        Thread.sleep(1000 * 60 * 2)
+                    }
+                }
+            }
+        }
     }
 }

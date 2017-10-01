@@ -1,5 +1,6 @@
 package zamgerapi.utility
 
+import zamgerapi.types.ActionForbiddenException
 import zamgerapi.types.RequestHistoryEntry
 import java.io.InputStreamReader
 import java.io.BufferedReader
@@ -47,33 +48,42 @@ class WebUtils {
             log(urlToRead)
             val url = URL(urlToRead)
             val conn = url.openConnection() as HttpURLConnection
-            conn.requestMethod = requestMethod
+            var response = ""
+            try {
+                conn.requestMethod = requestMethod
 
-            conn.setRequestProperty( "Content-Type", "application/x-www-form-urlencoded")
-            conn.setRequestProperty( "charset", "utf-8")
-            conn.instanceFollowRedirects = true
-            conn.useCaches = false
+                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
+                conn.setRequestProperty("charset", "utf-8")
+                conn.instanceFollowRedirects = true
+                conn.useCaches = false
 
-            if ( requestMethod.equals("POST", true)) {
-                val urlParameters = requestData
-                val postData = urlParameters.toByteArray(StandardCharsets.UTF_8)
+                if (requestMethod.equals("POST", true)) {
+                    val urlParameters = requestData
+                    val postData = urlParameters.toByteArray(StandardCharsets.UTF_8)
 
-                conn.doOutput = true
-                conn.setRequestProperty( "Content-Length", Integer.toString( postData.size ))
-                DataOutputStream(conn.outputStream).use({ wr -> wr.write(postData) })
+                    conn.doOutput = true
+                    conn.setRequestProperty("Content-Length", Integer.toString(postData.size))
+                    DataOutputStream(conn.outputStream).use({ wr -> wr.write(postData) })
+                }
+
+                val rd = BufferedReader(InputStreamReader(conn.inputStream))
+
+                var line = rd.readLine()
+                while (line != null) {
+                    result.append(line)
+
+                    line = rd.readLine()
+                }
+                rd.close()
+
+                response = result.toString()
+            } catch ( ex : Exception ) {
+                if ( conn.responseCode == 401 ) {
+                    throw ActionForbiddenException(ex)
+                } else {
+                    throw ex
+                }
             }
-
-            val rd = BufferedReader(InputStreamReader(conn.inputStream))
-
-            var line = rd.readLine()
-            while (line != null) {
-                result.append(line)
-
-                line = rd.readLine()
-            }
-            rd.close()
-
-            val response = result.toString()
             requestHistoy.put(urlToRead, RequestHistoryEntry(response))
             return response
         }
